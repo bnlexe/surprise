@@ -1,5 +1,34 @@
-const map = document.querySelector('#map');
+const countdownElement = document.getElementById('countdown');
+const mapElement = document.getElementById('map');
 const taskDisplay = document.getElementById('taskDisplay');
+
+const endTime = new Date("2024-11-07T13:00:00+03:00"); // Установка времени окончания в Стамбуле
+
+function updateCountdown() {
+    const now = new Date();
+    const remainingTime = endTime - now;
+
+    if (remainingTime <= 0) {
+        clearInterval(countdownInterval);
+        countdownElement.textContent = "Время пришло!";
+        mapElement.style.display = "grid"; // Показываем контент
+        taskDisplay.style.display = "block"; // Показываем задание
+        document.getElementById('timer').style.display = 'none'; // Скрываем таймер
+    } else {
+        const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24)); // Количество дней
+        const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+        countdownElement.textContent = `${days}д ${hours}ч ${minutes}м ${seconds}с`;
+    }
+}
+
+// Обновляем таймер каждую секунду
+const countdownInterval = setInterval(updateCountdown, 1000);
+updateCountdown(); // Первоначальный вызов
+
+const map = document.querySelector('#map');
 const answerInput = document.getElementById('answerInput');
 const readyButton = document.getElementById('submitAnswer');
 let currentTask = 1;

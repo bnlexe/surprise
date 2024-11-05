@@ -16,6 +16,15 @@ h1 {
     text-align: center; /* Центрируем заголовок */
 }
 
+.timer {
+    font-size: 24px; /* Размер шрифта таймера */
+    color: #fff; /* Цвет текста */
+    background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный фон для контраста */
+    padding: 20px; /* Отступы вокруг текста */
+    border-radius: 10px; /* Скругленные углы */
+    margin: 20px 0; /* Отступы сверху и снизу */
+}
+
 .map {
     display: grid;
     grid-template-columns: repeat(3, 90px);
