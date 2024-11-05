@@ -1,0 +1,69 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f7e6d4;
+    padding: 10px; /* Добавлено отступы */
+    box-sizing: border-box; /* Учитываем отступы в ширине */
+}
+
+h1 {
+    color: #333;
+    text-align: center; /* Центрируем заголовок */
+}
+
+.map {
+    display: grid;
+    grid-template-columns: repeat(3, 90px);
+    grid-template-rows: repeat(3, 90px);
+    gap: 5px;
+    justify-content: center; /* Центрируем сетку на экране */
+}
+
+.cell {
+    width: 90px;
+    height: 90px;
+    background-color: #f4b6c2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+}
+
+.locked {
+    background-color: #d3d3d3;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+#taskDisplay {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    max-width: 300px;
+    text-align: center;
+}
+
+#answerInput, #submitAnswer {
+    margin-top: 10px;
+    display: block;
+    width: 100%; /* Занимаем всю ширину */
+    max-width: 300px; /* Максимальная ширина для больших экранов */
+}
+
+@media (max-width: 480px) {
+    .map {
+        grid-template-columns: repeat(3, 80px);
+        grid-template-rows: repeat(3, 80px);
+    }
+    
+    h1 {
+        font-size: 24px; /* Меньший размер шрифта для мобильных */
+    }
+}
