@@ -9,12 +9,12 @@ const tasks = [
     { description: "Еркемммм я тебя очень сильно люблю и этот хоть и мини квест, но для тебя! Поцелуй меня туда куда мне больше всего нравиться иии получишь пароль для перехода дальше! p.s Я ТЕБЯ ЛЮБЛЮ БОЛЬШЕ ВСЕГО НА СВЕТЕ", checkAnswer: answer => answer === '2007' },
     { description: "Игра змейкаааа: Собери 7 яблок.", checkAnswer: () => startSnakeGame() },
     { description: "Викторина: Ответь правильно на 3 вопроса.", checkAnswer: () => startQuiz() },
-    { description: "Вопрос на память, вкус чего тебе не понравился на шашклыках?", checkAnswer: answer => /^жир$/i.test(answer)},
+    { description: "Вопрос на память, вкус чего тебе не понравился на шашлыках?", checkAnswer: answer => /^жир$/i.test(answer)},
     { description: "Игра Flappy Bird: Пройди через 5 препятствий.", checkAnswer: () => startFlappyBirdGame() },
     { description: "Викторина: Ответь правильно на 3 новых вопроса.", checkAnswer: () => startSecondQuiz() },
     { description: "Вопрос: Будешь ли ты всегда со мной?", checkAnswer: answer => /^да$/i.test(answer)},
     { description: "Знание языков тоже важно) 'My незабутня ay' переведи на Русский язык.", checkAnswer: answer => /^моя незабываемая луна$/i.test(answer)},
-    { description: "Любимая, вот твой подарок! Люблю тебя, спасибо за каждую секунду - 37,8729373, 32,4933606", checkAnswer: () => true }
+    { description: "Любимая, вот твой подарок! Люблю тебя, спасибо за каждую секунду проведенную с тобой - 37,8729373, 32,4933606", checkAnswer: () => true }
 ];
 
 // Функция для создания клеток
@@ -157,7 +157,7 @@ function startSnakeGame() {
         if (snakeX === food.x && snakeY === food.y) {
             score++;
             food = { x: Math.floor(Math.random() * 10) * box, y: Math.floor(Math.random() * 10) * box };
-            if (score === 1) { // Увеличено до 20 для завершения игры
+            if (score === 7) { // Увеличено до 20 для завершения игры
                 clearInterval(gameInterval);
                 showAchievementMessage();
                 unlockNextCell(currentTask);
@@ -228,7 +228,7 @@ function startFlappyBirdGame() {
     let pipeCount = 0;
     const pipeFrequency = 2000;
     const gap = 100;
-    const targetPipeCount = 1; // Целевое количество пройденных труб
+    const targetPipeCount = 5; // Целевое количество пройденных труб
     let pipeInterval;
 
     function drawBird() {
@@ -464,7 +464,7 @@ function showIncorrectAnswer() {
 
 function showAchievementMessage() {
     Swal.fire({
-        title: 'Вы достигли 20 яблок!',
+        title: 'Ты достигла 7 яблок!',
         text: 'Клетка разблокирована.',
         icon: 'success',
         confirmButtonText: 'ОК'
@@ -485,7 +485,7 @@ function showGameOver() {
 function showPipeAchievement() {
     Swal.fire({
         title: 'Поздравляем!',
-        text: 'Вы прошли 10 труб! Переход на следующую клетку...',
+        text: 'Ты прошла 5 труб! Переход на следующую клетку...',
         icon: 'success',
         confirmButtonText: 'ОК'
     }).then(() => {
@@ -495,7 +495,7 @@ function showPipeAchievement() {
 
 function showAllQuestionsAnswered() {
     Swal.fire({
-        title: 'Вы успешно ответили на все вопросы!',
+        title: 'Ты успешно ответила на все вопросы!',
         text: 'Клетка разблокирована.',
         icon: 'success',
         confirmButtonText: 'ОК'
