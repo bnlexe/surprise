@@ -7,7 +7,7 @@ body {
     min-height: 100vh;
     margin: 0;
     background-color: #f7e6d4;
-    padding: 10px; /* Добавлено отступы */
+    padding: 10px; /* Добавлено отступы*/
     box-sizing: border-box; /* Учитываем отступы в ширине */
 }
 

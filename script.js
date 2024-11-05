@@ -4,7 +4,7 @@ const answerInput = document.getElementById('answerInput');
 const readyButton = document.getElementById('submitAnswer');
 let currentTask = 1;
 
-// Список заданий и состояний клеток
+// Список заданий
 const tasks = [
     { description: "Еркемммм я тебя очень сильно люблю и этот хоть и мини квест, но для тебя! Поцелуй меня туда куда мне больше всего нравиться иии получишь пароль для перехода дальше! p.s Я ТЕБЯ ЛЮБЛЮ БОЛЬШЕ ВСЕГО НА СВЕТЕ", checkAnswer: answer => answer === '2007' },
     { description: "Игра змейкаааа: Собери 7 яблок.", checkAnswer: () => startSnakeGame() },
