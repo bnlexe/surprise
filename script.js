@@ -6,15 +6,15 @@ let currentTask = 1;
 
 // Список заданий и состояний клеток
 const tasks = [
-    { description: "1 - Начало квеста: Чтобы открыть следующую клетку, найдите первую записку. Введите пароль для перехода.", checkAnswer: answer => answer === 'test' },
-    { description: "2 - Мини-игра змейка: Соберите 20 яблок.", checkAnswer: () => startSnakeGame() },
-    { description: "3 - Викторина: Ответьте правильно на 3 вопроса.", checkAnswer: () => startQuiz() },
-    { description: "4 - Загадка от меня. Введите ключевую фразу для открытия.", checkAnswer: answer => answer === 'test' },
-    { description: "5 - Мини-игра Flappy Bird: Пройдите через 10 препятствий.", checkAnswer: () => startFlappyBirdGame() },
-    { description: "6 - Викторина: Ответьте правильно на 3 новых вопроса.", checkAnswer: () => startQuiz() },
-    { description: "7 - Вопрос: Будешь ли ты всегда со мной?", checkAnswer: answer => answer.toLowerCase() === 'да' },
-    { description: "8 - Перевод предложения. Введите ответ 'моя незабываемая луна'.", checkAnswer: answer => answer === 'моя незабываемая луна' },
-    { description: "9 - Поздравление с завершением квеста и координаты для подарка.", checkAnswer: () => true }
+    { description: "Еркемммм я тебя очень сильно люблю и этот хоть и мини квест, но для тебя! Поцелуй меня туда куда мне больше всего нравиться иии получишь пароль для перехода дальше! p.s Я ТЕБЯ ЛЮБЛЮ БОЛЬШЕ ВСЕГО НА СВЕТЕ", checkAnswer: answer => answer === '2007' },
+    { description: "Игра змейкаааа: Собери 7 яблок.", checkAnswer: () => startSnakeGame() },
+    { description: "Викторина: Ответь правильно на 3 вопроса.", checkAnswer: () => startQuiz() },
+    { description: "Вопрос на память, вкус чего тебе не понравился на шашклыках?", checkAnswer: answer => /^жир$/i.test(answer)},
+    { description: "Игра Flappy Bird: Пройди через 5 препятствий.", checkAnswer: () => startFlappyBirdGame() },
+    { description: "Викторина: Ответь правильно на 3 новых вопроса.", checkAnswer: () => startSecondQuiz() },
+    { description: "Вопрос: Будешь ли ты всегда со мной?", checkAnswer: answer => /^да$/i.test(answer)},
+    { description: "Знание языков тоже важно) 'My незабутня ay' переведи на Русский язык.", checkAnswer: answer => /^моя незабываемая луна$/i.test(answer)},
+    { description: "Любимая, вот твой подарок! Люблю тебя, спасибо за каждую секунду - 37,8729373, 32,4933606", checkAnswer: () => true }
 ];
 
 // Функция для создания клеток
@@ -47,11 +47,11 @@ function startTask(taskNumber) {
         readyButton.onclick = () => {
             const answer = answerInput.value;
             if (task.checkAnswer(answer)) {
-                alert("Ответ верный! Следующая клетка разблокирована.");
+                showCorrectAnswer();
                 unlockNextCell(taskNumber);
                 answerInput.value = ''; // Очищаем поле ввода
             } else {
-                alert("Ответ неверный. Попробуйте снова.");
+                showIncorrectAnswer();
             }
         };
     } else {
@@ -87,48 +87,45 @@ function unlockNextCell(taskNumber) {
 function startSnakeGame() {
     const mapElement = document.getElementById("map");
     const taskDisplay = document.getElementById("taskDisplay");
-    
+
     // Скрываем карту, чтобы показать только игру
     mapElement.style.display = "none";
-    taskDisplay.innerHTML = `<canvas id="snakeGame" width="400" height="400" style="background-color: #000;"></canvas>`;
+    taskDisplay.innerHTML = `
+        <canvas id="snakeGame" width="300" height="300" style="background-color: #000;"></canvas>
+        <div id="controls" style="text-align: center; margin-top: 10px;">
+            <button id="up" style="width: 60px; height: 60px; font-size: 24px; margin: 10px;">↑</button>
+            <div>
+                <button id="left" style="width: 60px; height: 60px; font-size: 24px; margin: 10px;">←</button>
+                <button id="right" style="width: 60px; height: 60px; font-size: 24px; margin: 10px;">→</button>
+            </div>
+            <button id="down" style="width: 60px; height: 60px; font-size: 24px; margin: 10px;">↓</button>
+        </div>
+    `;
+
     const canvas = document.getElementById("snakeGame");
     const ctx = canvas.getContext("2d");
     const box = 20; // Размер одной клетки
     let score = 0;
-    
+
     // Начальные позиции змейки
     let snake = [{ x: 4 * box, y: 4 * box }];
     let food = { x: Math.floor(Math.random() * 10) * box, y: Math.floor(Math.random() * 10) * box };
     let direction;
     let gameInterval; // Переменная для хранения интервала игры
 
-    // Управление
-
-    // Добавление управления для мобильных устройств
-    document.addEventListener("touchstart", (e) => {
-        const touch = e.touches[0];
-        if (touch.clientX < canvas.width / 2) {
-            direction = (direction !== "RIGHT") ? "LEFT" : direction;
-        } else {
-            direction = (direction !== "LEFT") ? "RIGHT" : direction;
-        }
-    });
-
-    document.addEventListener("touchend", (e) => {
-        const touch = e.changedTouches[0];
-        if (touch.clientY < canvas.height / 2) {
-            direction = (direction !== "DOWN") ? "UP" : direction;
-        } else {
-            direction = (direction !== "UP") ? "DOWN" : direction;
-        }
-    });
-    
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-        else if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
-        else if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
-        else if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
-    });
+    // Управление с помощью кнопок
+    document.getElementById("up").onclick = () => {
+        if (direction !== "DOWN") direction = "UP";
+    };
+    document.getElementById("down").onclick = () => {
+        if (direction !== "UP") direction = "DOWN";
+    };
+    document.getElementById("left").onclick = () => {
+        if (direction !== "RIGHT") direction = "LEFT";
+    };
+    document.getElementById("right").onclick = () => {
+        if (direction !== "LEFT") direction = "RIGHT";
+    };
 
     // Обновление игры
     gameInterval = setInterval(draw, 150);
@@ -162,7 +159,7 @@ function startSnakeGame() {
             food = { x: Math.floor(Math.random() * 10) * box, y: Math.floor(Math.random() * 10) * box };
             if (score === 1) { // Увеличено до 20 для завершения игры
                 clearInterval(gameInterval);
-                alert("Вы достигли 20 яблок! Клетка разблокирована.");
+                showAchievementMessage();
                 unlockNextCell(currentTask);
                 mapElement.style.display = "grid"; // Возвращаем карту
                 taskDisplay.innerHTML = ""; // Очищаем дисплей задания
@@ -181,7 +178,7 @@ function startSnakeGame() {
             snake.some(segment => segment.x === newHead.x && segment.y === newHead.y)
         ) {
             clearInterval(gameInterval);
-            alert("Игра окончена. Перезапускаем игру...");
+            showGameOver();
             restartSnakeGame(); // Перезапускаем игру
             return;
         }
@@ -196,8 +193,9 @@ function startSnakeGame() {
         food = { x: Math.floor(Math.random() * 10) * box, y: Math.floor(Math.random() * 10) * box };
         clearInterval(gameInterval);
         gameInterval = setInterval(draw, 150);
-    }    
+    }
 }
+
 
 function startFlappyBirdGame() {
     const mapElement = document.getElementById("map");
@@ -267,7 +265,7 @@ function startFlappyBirdGame() {
         }
 
         if (pipeCount >= targetPipeCount) {
-            alert("Поздравляем! Вы прошли 10 труб! Переход на следующую клетку...");
+            showPipeAchievement();
             returnToMap();
         }
     }
@@ -347,11 +345,18 @@ function startFlappyBirdGame() {
 
 let currentQuestionIndex = 0;
 
-// Список вопросов для викторины
+// Список вопросов для первой викторины
 const quizQuestions = [
-    { question: "Какой цвет у неба?", answers: ["Синий", "Красный", "Зеленый"], correct: "Синий" },
-    { question: "Сколько планет в Солнечной системе?", answers: ["8", "9", "7"], correct: "8" },
-    { question: "Какой океан самый большой?", answers: ["Атлантический", "Тихий", "Индийский"], correct: "Тихий" },
+    { question: "Насколько я тебя люблю?", answers: ["100", "100.000.000.000.000", "∞"], correct: "∞" },
+    { question: "Будем ли мы с тобой всегда счастливы?", answers: ["ДА", "Посмотрим", "Нет"], correct: "ДА" },
+    { question: "Ты мечтала об таком как я и я мечтал о такой как ты?", answers: ["Нет", "ДА", "Почти"], correct: "ДА" },
+];
+
+// Список вопросов для второй викторины
+const secondQuizQuestions = [
+    { question: "Думаю ли я о тебе часто?", answers: ["Да, очень часто", "Практически нет", "Sometimes"], correct: "Да, очень часто" },
+    { question: "Помогаешь ли ты мне в моей жизни?", answers: ["Конечно", "нет..", "без комментариев"], correct: "Конечно" },
+    { question: "Мой любимый цвет это?", answers: ["Черный", "Голубой", "Нету"], correct: "Нету" },
 ];
 
 function startQuiz() {
@@ -363,7 +368,7 @@ function startQuiz() {
 
     function displayQuestion() {
         if (currentQuestionIndex >= quizQuestions.length) {
-            alert("Вы успешно ответили на все вопросы! Клетка разблокирована.");
+            showAllQuestionsAnswered();
             unlockNextCell(currentTask);
 
             // Возвращаем карту обратно после завершения викторины
@@ -384,16 +389,136 @@ function startQuiz() {
 
     function checkAnswer(selected) {
         if (selected === quizQuestions[currentQuestionIndex].correct) {
-            alert("Правильный ответ!");
+            showCorrectAnswerFeedback();
             currentQuestionIndex++;
             displayQuestion();
         } else {
-            alert("Неправильный ответ. Попробуйте снова.");
+            showIncorrectAnswerFeedback();
         }
     }
 
     displayQuestion();
 }
+
+// Функция для запуска второй викторины
+function startSecondQuiz() {
+    const mapElement = document.getElementById("map");
+    const taskDisplay = document.getElementById("taskDisplay");
+    currentQuestionIndex = 0; // Сброс индекса вопросов для новой викторины
+
+    // Скрываем карту, чтобы показать только викторину
+    mapElement.style.display = "none";
+
+    function displayQuestion() {
+        if (currentQuestionIndex >= secondQuizQuestions.length) {
+            showAllQuestionsAnswered();
+            unlockNextCell(currentTask);
+
+            // Возвращаем карту обратно после завершения викторины
+            mapElement.style.display = "grid";
+            taskDisplay.innerHTML = ""; // Очищаем содержимое задания
+            return;
+        }
+
+        const question = secondQuizQuestions[currentQuestionIndex];
+        taskDisplay.innerHTML = `<p>${question.question}</p>`;
+        question.answers.forEach(answer => {
+            const button = document.createElement("button");
+            button.textContent = answer;
+            button.onclick = () => checkAnswer(answer);
+            taskDisplay.appendChild(button);
+        });
+    }
+
+    function checkAnswer(selected) {
+        if (selected === secondQuizQuestions[currentQuestionIndex].correct) {
+            showCorrectAnswerFeedback();
+            currentQuestionIndex++;
+            displayQuestion();
+        } else {
+            showIncorrectAnswerFeedback();
+        }
+    }
+
+    displayQuestion();
+}
+
+
+function showCorrectAnswer() {
+    Swal.fire({
+        title: 'Ответ верный!',
+        text: 'Следующая клетка разблокирована.',
+        icon: 'success',
+        confirmButtonText: 'ОК'
+    });
+}
+
+function showIncorrectAnswer() {
+    Swal.fire({
+        title: 'Ответ неверный',
+        text: 'Попробуйте снова.',
+        icon: 'error',
+        confirmButtonText: 'ОК'
+    });
+}
+
+function showAchievementMessage() {
+    Swal.fire({
+        title: 'Вы достигли 20 яблок!',
+        text: 'Клетка разблокирована.',
+        icon: 'success',
+        confirmButtonText: 'ОК'
+    });
+}
+
+function showGameOver() {
+    Swal.fire({
+        title: 'Игра окончена',
+        text: 'Перезапускаем игру...',
+        icon: 'warning',
+        confirmButtonText: 'ОК'
+    }).then(() => {
+        restartSnakeGame(); // Здесь вы можете вызвать вашу функцию перезапуска
+    });
+}
+
+function showPipeAchievement() {
+    Swal.fire({
+        title: 'Поздравляем!',
+        text: 'Вы прошли 10 труб! Переход на следующую клетку...',
+        icon: 'success',
+        confirmButtonText: 'ОК'
+    }).then(() => {
+        returnToMap(); // Здесь вы можете вызвать вашу функцию возвращения к карте
+    });
+}
+
+function showAllQuestionsAnswered() {
+    Swal.fire({
+        title: 'Вы успешно ответили на все вопросы!',
+        text: 'Клетка разблокирована.',
+        icon: 'success',
+        confirmButtonText: 'ОК'
+    });
+}
+
+function showCorrectAnswerFeedback() {
+    Swal.fire({
+        title: 'Правильный ответ!',
+        icon: 'success',
+        confirmButtonText: 'ОК'
+    });
+}
+
+function showIncorrectAnswerFeedback() {
+    Swal.fire({
+        title: 'Неправильный ответ',
+        text: 'Попробуйте снова.',
+        icon: 'error',
+        confirmButtonText: 'ОК'
+    });
+}
+
 
 // Запускаем создание клеток
 createCells();
